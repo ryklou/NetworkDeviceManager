@@ -1,46 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
+<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
 </head>
 
 <body>
-    <div class="menu-bar">
-        <ul>
-            <li></li>
-            <li><a href="{{ url_for('add_device') }}">Add Device</a></li>
+<div class="ui labeled icon menu">
+	<a class="item" href="{{ url_for('index') }}">
+		<i class="list alternate icon"></i>
+		Device List
+	</a> 
+	<a class="item" href="{{ url_for('add_device') }}">
+		<i class="plus circle icon"></i>
+		Add Device
+	</a>
+	<a class="item" href="#search">
+		<i class="search icon"></i>
+		Search
+	</a>
+		<a class="item" href="#about">
+		<i class="question icon"></i>
+		About
+	</a>
+  </div>
+<div class="main-content">
+  <div class="window"> {% block content %}{% endblock %} </div>
+</div>
 
-            <li><a href="#">Menu 3</a></li>
-        </ul>
-        <div class="search-box">
-            <input type="search" placeholder="Search...">
-        </div>
-    </div>
-    <div class="main-content">
-        <div class="window">
-            {% block content %}{% endblock %}
-        </div>
-        <div class="sidebar">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="sidebar-logo">
-            <p class="filler-text">FILLER TEXT</p>
-            <hr class="divider">
-            <ul class="sidebar-menu">
-
-                {% block sidebar_content %}{% endblock %}
-            </ul>
-            <hr class="divider">
-            <p class="sidebar-footer">&copy; 2023 COMPANY NAME</p>
-        </div>
-    </div>
-
-    <!-- Add your JavaScript file or external scripts here -->
-    <script src=""></script>
+<!-- Add your JavaScript file or external scripts here -->
 </body>
 </html>
