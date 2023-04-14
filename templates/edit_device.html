@@ -2,26 +2,30 @@
 
 {% block title %}Edit Device{% endblock %}
 
-{% block sidebar_content %}
+{% block content %}
 <h1>{{ title }}</h1>
-<form method="post" action="{{ url_for('edit_device', id=device.id) }}">
+<form class="ui form" method="post" action="{{ url_for('edit_device', id=device.id) }}">
     {{ form.csrf_token }}
-    <div>
-        {{ form.device_name.label }} {{ form.device_name() }}
+    <div class="field">
+        <label>{{ form.device_name.label }}</label>
+        {{ form.device_name() }}
     </div>
-    <div>
-        {{ form.mac_address.label }} {{ form.mac_address() }}
+    <div class="field">
+        <label>{{ form.mac_address.label }}</label>
+        {{ form.mac_address() }}
     </div>
-    <div>
-        {{ form.device_type.label }} {{ form.device_type() }}
+    <div class="field">
+        <label>{{ form.device_type.label }}</label>
+        {{ form.device_type() }}
     </div>
-    <div>
-        {{ form.assigned_ip.label }} {{ form.assigned_ip() }}
+    <div class="field">
+        <label>{{ form.assigned_ip.label }}</label>
+        {{ form.assigned_ip() }}
     </div>
-    <div>
-        {{ form.submit() }}
-        <a href="{{ url_for('delete_device', id=device.id) }}" class="delete-link">
-            <img src="{{ url_for('static', filename='images/delete.png') }}" alt="Delete">
+    <div class="field">
+        {{ form.submit(class="ui button primary") }}
+        <a href="{{ url_for('delete_device', id=device.id) }}" class="delete-link ui red button">Delete
+            
         </a>
     </div>
 </form>
