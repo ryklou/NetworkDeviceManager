@@ -21,17 +21,30 @@
 		<i class="plus circle icon"></i>
 		Add Device
 	</a>
-	<a class="item" href="#search">
+	<a class="item disabled" href="#search">
 		<i class="search icon"></i>
 		Search
 	</a>
-		<a class="item" href="#about">
+		<a class="item disabled" href="#about">
 		<i class="question icon"></i>
 		About
 	</a>
   </div>
 <div class="main-content">
   <div class="window"> {% block content %}{% endblock %} </div>
+	<div class="ui modal">
+    <div class="header">
+        Error
+    </div>
+    <div class="content">
+        <p>{{ error_message }}</p>
+    </div>
+    <div class="actions">
+        <div class="ui ok primary button">
+            OK
+        </div>
+    </div>
+</div>
 </div>
 
 <!-- Add your JavaScript file or external scripts here -->

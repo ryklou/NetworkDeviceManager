@@ -1,6 +1,7 @@
 from datetime import datetime
-from flask import Flask, render_template, flash, redirect, url_for, jsonify
+from flask import Flask, render_template, flash, redirect, url_for, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import IntegrityError
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, MacAddress
@@ -29,18 +30,11 @@ def index():
     devices = Device.query.all()
     return render_template('index.html', title='Device List', devices=devices)
 
-class EditDeviceForm(FlaskForm):
-    device_name = StringField('Device Name', validators=[DataRequired()])
-    mac_address = StringField('MAC Address', validators=[DataRequired(), MacAddress()])
-    device_type = StringField('Device Type', validators=[DataRequired()])
-    assigned_ip = StringField('Assigned IP')
-    submit = SubmitField('Save')
-
 @app.route('/add-device', methods=['GET', 'POST'])
 def add_device():
- form = AddDeviceForm()
+    form = AddDeviceForm()
 
- if form.validate_on_submit():
+    if form.validate_on_submit():
         device = Device(
             device_name=form.device_name.data,
             mac_address=form.mac_address.data,
@@ -50,31 +44,40 @@ def add_device():
         db.session.add(device)
         try:
             db.session.commit()
+            flash('Device added successfully!')
             return redirect(url_for('index'))
         except IntegrityError as e:
-            if "Duplicate entry" in str(e):
-                db.session.rollback()
+            db.session.rollback()
+            error_message = str(e.orig)  # Extract the error message
+            if "Duplicate entry" in error_message:
                 return jsonify({"error": "duplicate"}), 409  # Conflict
             else:
-                db.session.rollback()
                 return jsonify({"error": "unknown"}), 500  # Internal Server Error
- return render_template('add_device.html', form=form)
+
+    return render_template('add_device.html', form=form)
+
 @app.route('/edit-device/<int:id>', methods=['GET', 'POST'])
 def edit_device(id):
     device = Device.query.get_or_404(id)
-    form = EditDeviceForm(obj=device)
-    if form.validate_on_submit():
-        device.device_name = form.device_name.data
-        device.mac_address = form.mac_address.data
-        device.device_type = form.device_type.data
-        device.assigned_ip = form.assigned_ip.data
-        device.date_modified = datetime.utcnow()
-        db.session.commit()
-        flash('Device updated successfully!')
-        return redirect(url_for('index'))
+
+    if request.method == 'GET':
+        form = EditDeviceForm(current_device_type=device.device_type, obj=device)
+    else:
+        form = EditDeviceForm(request.form, obj=device)
+        
+        if form.validate_on_submit():
+            device.device_name = form.device_name.data
+            device.mac_address = form.mac_address.data
+            device.device_type = form.device_type.data
+            device.assigned_ip = form.assigned_ip.data
+            device.date_modified = datetime.utcnow()
+            db.session.commit()
+            flash('Device updated successfully!')
+            return redirect(url_for('index'))
+
     return render_template('edit_device.html', title='Edit Device', form=form, device=device)
 
-@app.route('/delete-device/<int:id>', methods=['POST'])
+@app.route('/delete-device/<int:id>', methods=['GET', 'POST'])
 def delete_device(id):
     device = Device.query.get_or_404(id)
     db.session.delete(device)

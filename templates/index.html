@@ -4,7 +4,7 @@
 
 {% block content %}
 <h2 class="ui header">
-  <i class="list alternate icon"></i>
+  <i class="settings icon"></i>
   <div class="content">{{ title }}
     <div class="sub header">View/Edit</div>
   </div>
@@ -34,11 +34,10 @@
             <td>{{ device.device_type }}</td>
             <td>{{ device.date_added.strftime('%Y-%m-%d') }}</td>
             <td>{% if device.date_modified %}{{ device.date_modified.strftime('%Y-%m-%d') }}{% endif %}</td>
-            <td><a href="{{ url_for('edit_device', id=device.id) }}"><img src="{{ url_for('static', filename='edit.png') }}" alt="Edit Device"></a></td>
+            <td><a href="{{ url_for('edit_device', id=device.id) }}"><button class="ui positive icon button"><i class="edit icon"></i></button></a></td>
             <td>
                 <form action="{{ url_for('delete_device', id=device.id) }}" method="POST" style="display:inline;">
-                    <button type="submit" class="ui icon button" style="padding: 0;">
-                        <img src="{{ url_for('static', filename='delete.png') }}" alt="Delete">
+                    <button type="submit" class="ui red icon button"><i class="trash alternate icon"></i>
                     </button>
                 </form>
             </td>
@@ -46,4 +45,5 @@
         {% endfor %}
 	</tbody>
 </table>
+
 {% endblock %}

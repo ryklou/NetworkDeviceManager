@@ -3,30 +3,34 @@
 {% block title %}Edit Device{% endblock %}
 
 {% block content %}
-<h1>{{ title }}</h1>
+<h2 class="ui header">
+  <i class="edit icon"></i>
+  <div class="content">{{ title }}
+    <div class="sub header">Edit Current Device</div>
+  </div>
+</h2>
 <form class="ui form" method="post" action="{{ url_for('edit_device', id=device.id) }}">
     {{ form.csrf_token }}
     <div class="field">
-        <label>{{ form.device_name.label }}</label>
-        {{ form.device_name() }}
+        {{ form.device_name.label }} {{ form.device_name() }}
     </div>
     <div class="field">
-        <label>{{ form.mac_address.label }}</label>
-        {{ form.mac_address() }}
+        {{ form.mac_address.label }} {{ form.mac_address() }}
     </div>
     <div class="field">
-        <label>{{ form.device_type.label }}</label>
-        {{ form.device_type() }}
+        {{ form.device_type.label }} {{ form.device_type() }}
     </div>
     <div class="field">
-        <label>{{ form.assigned_ip.label }}</label>
-        {{ form.assigned_ip() }}
+        {{ form.assigned_ip.label }} {{ form.assigned_ip() }}
     </div>
-    <div class="field">
-        {{ form.submit(class="ui button primary") }}
+	 <div class="field">
+  <button type="submit" class="ui blue button">
+    <i class="save icon"></i>Save
+  </button>
         <a href="{{ url_for('delete_device', id=device.id) }}" class="delete-link ui red button">Delete
             
         </a>
     </div>
 </form>
+
 {% endblock %}

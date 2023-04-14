@@ -3,30 +3,29 @@
 {% block title %}Add Device{% endblock %}
 
 {% block content %}
-<h2 class="ui header">
- <i class="plus circle icon"></i>
+<h2 class="ui header"> <i class="plus circle icon"></i>
   <div class="content">Add Device
     <div class="sub header">Add New Device</div>
   </div>
 </h2>
-  <form class="ui form" method="post" action="{{ url_for('add_device') }}">
-    {{ form.csrf_token }}
-    <div class="field">
-      <label for="{{ form.device_name.id }}">Device Name</label>
-      {{ form.device_name(class='form-control', id='device-name-input') }}
-    </div>
-    <div class="field">
-      <label for="{{ form.mac_address.id }}">MAC Address</label>
-      {{ form.mac_address(class='form-control', id='mac-address-input') }}
-    </div>
-    <div class="field">
-      <label for="{{ form.device_type.id }}">Device Type</label>
-      {{ form.device_type(class='form-control', id='device-type-input') }}
-    </div>
-    <div class="field">
-      <label for="{{ form.assigned_ip.id }}">Assigned IP</label>
-      {{ form.assigned_ip(class='form-control', id='assigned-ip-input') }}
-    </div>
-    <button class="ui button" type="submit">Add Device</button>
-  </form>
+<form class="ui form" method="post" action="{{ url_for('add_device') }}">
+	  {{ form.csrf_token }}
+	  <div class="field">
+		<label for="{{ form.device_name.id }}">Device Name</label>
+		{{ form.device_name(class='form-control', id='device-name-input') }} </div>
+	  <div class="field">
+		<label for="{{ form.mac_address.id }}">MAC Address</label>
+		{{ form.mac_address(class='form-control', id='mac-address-input') }} </div>
+	  <div class="field">
+		<label for="{{ form.device_type.id }}">Device Type</label>
+		{{ form.device_type(class='form-control', id='device-type-input') }} </div>
+	
+	  <div class="field">
+		<label for="{{ form.assigned_ip.id }}">Assigned IP</label>
+		{{ form.assigned_ip(class='form-control', id='assigned-ip-input') }} </div>
+  <button class="ui positive button" type="submit" >
+	  <i class="plus circle icon"></i>
+	  Add Device
+  </button>
+</form>
 {% endblock %}
