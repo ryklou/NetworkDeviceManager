@@ -1,0 +1,5 @@
+include README.md
+include LICENSE
+include requirements.txt
+recursive-include network_device_manager/templates *
+recursive-include network_device_manager/static *
