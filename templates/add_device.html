@@ -1,48 +1,32 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block title %}Add Device{% endblock %}
 
 {% block content %}
-<h1>{{ title }}</h1>
-<form id="add-device-form" method="post">
+<h2 class="ui header">
+ <i class="plus circle icon"></i>
+  <div class="content">Add Device
+    <div class="sub header">Add New Device</div>
+  </div>
+</h2>
+  <form class="ui form" method="post" action="{{ url_for('add_device') }}">
     {{ form.csrf_token }}
-    <div>
-        {{ form.device_name.label }} {{ form.device_name() }}
+    <div class="field">
+      <label for="{{ form.device_name.id }}">Device Name</label>
+      {{ form.device_name(class='form-control', id='device-name-input') }}
     </div>
-    <div>
-        {{ form.mac_address.label }} {{ form.mac_address() }}
+    <div class="field">
+      <label for="{{ form.mac_address.id }}">MAC Address</label>
+      {{ form.mac_address(class='form-control', id='mac-address-input') }}
     </div>
-    <div>
-        {{ form.device_type.label }} {{ form.device_type() }}
+    <div class="field">
+      <label for="{{ form.device_type.id }}">Device Type</label>
+      {{ form.device_type(class='form-control', id='device-type-input') }}
     </div>
-    <div>
-        {{ form.assigned_ip.label }} {{ form.assigned_ip() }}
+    <div class="field">
+      <label for="{{ form.assigned_ip.id }}">Assigned IP</label>
+      {{ form.assigned_ip(class='form-control', id='assigned-ip-input') }}
     </div>
-    <div>
-        {{ form.submit() }}
-    </div>
-</form>
-
-<script>
-    $("#add-device-form").on("submit", function (event) {
-        event.preventDefault();
-        let formData = $(this).serialize();
-
-        $.ajax({
-            type: "POST",
-            url: "/add-device",
-            data: formData,
-            success: function (response) {
-                window.location.href = "/"; // Redirect to the home page
-            },
-            error: function (xhr, status, error) {
-                if (xhr.status == 409) { // Conflict - duplicate entry
-                    alert("Error: Duplicate MAC Address.");
-                } else {
-                    alert("An error occurred while adding the device.");
-                }
-            }
-        });
-    });
-</script>
+    <button class="ui button" type="submit">Add Device</button>
+  </form>
 {% endblock %}
