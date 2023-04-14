@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Add Device</h1>
+<form id="add-device-form" method="post">
+    {{ form.csrf_token }}
+    ...
+    <input type="submit" value="Add Device">
+</form>
+
+<script>
+  $("#add-device-form").on("submit", function(event) {
+    event.preventDefault();
+    let formData = $(this).serialize();
+
+    $.ajax({
+      type: "POST",
+      url: "/add_device",
+      data: formData,
+      success: function(response) {
+        window.location.href = "/"; // Redirect to the home page
+      },
+      error: function(xhr, status, error) {
+        if (xhr.status == 409) { // Conflict - duplicate entry
+          alert("Error: Duplicate MAC Address.");
+        } else {
+          alert("An error occurred while adding the device.");
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

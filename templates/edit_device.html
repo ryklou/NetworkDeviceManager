@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Device{% endblock %}
+
+{% block sidebar_content %}
+<h1>{{ title }}</h1>
+<form method="post" action="{{ url_for('edit_device', id=device.id) }}">
+    {{ form.csrf_token }}
+    <div>
+        {{ form.device_name.label }} {{ form.device_name() }}
+    </div>
+    <div>
+        {{ form.mac_address.label }} {{ form.mac_address() }}
+    </div>
+    <div>
+        {{ form.device_type.label }} {{ form.device_type() }}
+    </div>
+    <div>
+        {{ form.assigned_ip.label }} {{ form.assigned_ip() }}
+    </div>
+    <div>
+        {{ form.submit() }}
+        <a href="{{ url_for('delete_device', id=device.id) }}" class="delete-link">
+            <img src="{{ url_for('static', filename='images/delete.png') }}" alt="Delete">
+        </a>
+    </div>
+</form>
+{% endblock %}
