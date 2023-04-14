@@ -3,7 +3,12 @@
 {% block title %}Device List{% endblock %}
 
 {% block content %}
-<h1>{{ title }}</h1>
+<h2 class="ui header">
+  <i class="list alternate icon"></i>
+  <div class="content">{{ title }}
+    <div class="sub header">View/Edit</div>
+  </div>
+</h2>
 
 <table class="ui compact celled definition table">
     <thead>
@@ -29,23 +34,16 @@
             <td>{{ device.device_type }}</td>
             <td>{{ device.date_added.strftime('%Y-%m-%d') }}</td>
             <td>{% if device.date_modified %}{{ device.date_modified.strftime('%Y-%m-%d') }}{% endif %}</td>
-            <td><a href="{{ url_for('edit_device', id=device.id) }}"><img src="{{ url_for('static', filename='edit.png') }}" alt="Edit Device"></a>
-            <td><a href="{{ url_for('delete_device', id=device.id) }}"><img src="{{ url_for('static', filename='delete.png') }}" alt="Delete"></a></td>
+            <td><a href="{{ url_for('edit_device', id=device.id) }}"><img src="{{ url_for('static', filename='edit.png') }}" alt="Edit Device"></a></td>
+            <td>
+                <form action="{{ url_for('delete_device', id=device.id) }}" method="POST" style="display:inline;">
+                    <button type="submit" class="ui icon button" style="padding: 0;">
+                        <img src="{{ url_for('static', filename='delete.png') }}" alt="Delete">
+                    </button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
-    </tbody>
-    <tfoot class="full-width">
-        <tr>
-            <th></th>
-            <th colspan="12">
-                <div class="ui right floated small primary labeled icon button">
-                    <a href="{{ url_for('add_device') }}"><i class="user icon"></i> Add Device </a>
-                </div>
-
-            </th>
-            </th>
-        </tr>
-    </tfoot>
+	</tbody>
 </table>
 {% endblock %}
-
