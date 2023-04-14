@@ -5,6 +5,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, MacAddress
 from flask_migrate import Migrate
+from forms import AddDeviceForm, EditDeviceForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'my_secret_key'

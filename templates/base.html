@@ -7,14 +7,16 @@
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
 </head>
 
 <body>
     <div class="menu-bar">
-        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo">
         <ul>
             <li></li>
-            <li><a href="#">Menu 2</a></li>
+            <li><a href="{{ url_for('add_device') }}">Add Device</a></li>
+
             <li><a href="#">Menu 3</a></li>
         </ul>
         <div class="search-box">
@@ -30,10 +32,9 @@
             <p class="filler-text">FILLER TEXT</p>
             <hr class="divider">
             <ul class="sidebar-menu">
-                <li><a href="{{ url_for('add_device') }}">Add Device</a></li>
-            </ul>
-            {% block sidebar_content %}{% endblock %}
 
+                {% block sidebar_content %}{% endblock %}
+            </ul>
             <hr class="divider">
             <p class="sidebar-footer">&copy; 2023 COMPANY NAME</p>
         </div>
