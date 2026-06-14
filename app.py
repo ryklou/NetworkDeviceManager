@@ -3,6 +3,7 @@ from flask import Flask, render_template, flash, redirect, url_for, request
 from sqlalchemy.exc import IntegrityError
 from flask_migrate import Migrate
 from models import db, Device
+from flask_wtf.csrf import generate_csrf
 from forms import AddDeviceForm, EditDeviceForm
 
 app = Flask(__name__)
@@ -36,7 +37,7 @@ with app.app_context():
 @app.route('/')
 def index():
     devices = Device.query.order_by(Device.date_added.desc()).all()
-    return render_template('index.html', title='Device List', devices=devices)
+    return render_template('index.html', title='Device List', devices=devices, delete_csrf=generate_csrf())
 
 
 @app.route('/add-device', methods=['GET', 'POST'])

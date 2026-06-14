@@ -87,7 +87,7 @@
     <p id="confirmMsg">This cannot be undone.</p>
     <div class="confirm-actions">
       <form id="deleteForm" method="POST">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="csrf_token" value="{{ delete_csrf }}">
         <button type="submit" class="btn btn-danger">Delete</button>
       </form>
       <button class="btn btn-secondary" onclick="closeConfirm()">Cancel</button>
