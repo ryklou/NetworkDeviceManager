@@ -1,52 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>{% block title %}{% endblock %}</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
-<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}NetWatch{% endblock %} · NetWatch</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-
 <body>
-<div class="ui labeled icon menu">
-	<a class="item" href="{{ url_for('index') }}">
-		<i class="list alternate icon"></i>
-		Device List
-	</a> 
-	<a class="item" href="{{ url_for('add_device') }}">
-		<i class="plus circle icon"></i>
-		Add Device
-	</a>
-	<a class="item disabled" href="#search">
-		<i class="search icon"></i>
-		Search
-	</a>
-		<a class="item disabled" href="#about">
-		<i class="question icon"></i>
-		About
-	</a>
-  </div>
-<div class="main-content">
-  <div class="window"> {% block content %}{% endblock %} </div>
-	<div class="ui modal">
-    <div class="header">
-        Error
-    </div>
-    <div class="content">
-        <p>{{ error_message }}</p>
-    </div>
-    <div class="actions">
-        <div class="ui ok primary button">
-            OK
-        </div>
-    </div>
-</div>
-</div>
 
-<!-- Add your JavaScript file or external scripts here -->
+  <nav class="nav">
+    <a href="{{ url_for('index') }}" class="nav-brand">
+      <span class="nav-brand-icon">⬡</span>
+      <span class="nav-brand-text">NetWatch</span>
+    </a>
+    <div class="nav-links">
+      <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">
+        Devices
+      </a>
+      <a href="{{ url_for('add_device') }}" class="nav-link nav-link-cta {% if request.endpoint == 'add_device' %}active{% endif %}">
+        + Add Device
+      </a>
+    </div>
+  </nav>
+
+  <main class="main">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">
+              <span class="flash-icon">
+                {% if category == 'success' %}✓{% elif category == 'error' %}✕{% else %}ℹ{% endif %}
+              </span>
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <span>NetWatch</span>
+    <span class="footer-sep">·</span>
+    <span>Network Device Manager</span>
+  </footer>
+
+  <script>
+    // Auto-dismiss flash messages
+    setTimeout(() => {
+      document.querySelectorAll('.flash').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(-8px)';
+        setTimeout(() => el.remove(), 300);
+      });
+    }, 4000);
+  </script>
 </body>
 </html>

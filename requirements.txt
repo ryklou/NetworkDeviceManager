@@ -1,6 +1,6 @@
 Flask
-Flask_Migrate
-flask_sqlalchemy
-Flask_WTF
+Flask-Migrate
+Flask-SQLAlchemy
+Flask-WTF
 SQLAlchemy
 WTForms

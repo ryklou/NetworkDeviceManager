@@ -1,49 +1,111 @@
 {% extends 'base.html' %}
-
-{% block title %}Device List{% endblock %}
+{% block title %}Devices{% endblock %}
 
 {% block content %}
-<h2 class="ui header">
-  <i class="settings icon"></i>
-  <div class="content">{{ title }}
-    <div class="sub header">View/Edit</div>
-  </div>
-</h2>
+<div class="page-header">
+  <h1>// device_inventory</h1>
+  <p>Manage and monitor your network devices.</p>
+</div>
 
-<table class="ui compact celled definition table">
+{% if devices %}
+<div class="stats-bar">
+  <div class="stat">
+    <span class="stat-value">{{ devices | length }}</span>
+    <span class="stat-label">Total</span>
+  </div>
+  <div class="stat">
+    <span class="stat-value">{{ devices | selectattr('assigned_ip') | list | length }}</span>
+    <span class="stat-label">With IP</span>
+  </div>
+  <div class="stat">
+    <span class="stat-value">{{ devices | map(attribute='device_type') | unique | list | length }}</span>
+    <span class="stat-label">Types</span>
+  </div>
+</div>
+{% endif %}
+
+<div class="table-wrap">
+  {% if devices %}
+  <table class="device-table">
     <thead>
-        <tr>
-            <th></th>
-            <th>Device Name</th>
-            <th>Assigned IP</th>
-            <th>MAC Address</th>
-            <th>Device Type</th>
-            <th>Date Added</th>
-            <th>Date Modified</th>
-            <th>EDIT</th>
-            <th>DELETE</th>
-        </tr>
+      <tr>
+        <th class="td-icon"></th>
+        <th>Device Name</th>
+        <th>MAC Address</th>
+        <th>Assigned IP</th>
+        <th>Type</th>
+        <th>Added</th>
+        <th>Modified</th>
+        <th>Actions</th>
+      </tr>
     </thead>
     <tbody>
-        {% for device in devices %}
-        <tr>
-            <td class="collapsing"><img src="{{ url_for('static', filename=device.device_type + '.png') }}" alt="{{ device.device_type }}"></td>
-            <td>{{ device.device_name }}</td>
-            <td>{{ device.assigned_ip }}</td>
-            <td>{{ device.mac_address }}</td>
-            <td>{{ device.device_type }}</td>
-            <td>{{ device.date_added.strftime('%Y-%m-%d') }}</td>
-            <td>{% if device.date_modified %}{{ device.date_modified.strftime('%Y-%m-%d') }}{% endif %}</td>
-            <td><a href="{{ url_for('edit_device', id=device.id) }}"><button class="ui positive icon button"><i class="edit icon"></i></button></a></td>
-            <td>
-                <form action="{{ url_for('delete_device', id=device.id) }}" method="POST" style="display:inline;">
-                    <button type="submit" class="ui red icon button"><i class="trash alternate icon"></i>
-                    </button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-	</tbody>
-</table>
+      {% for device in devices %}
+      <tr>
+        <td class="td-icon">
+          <div class="device-icon">{{ device_icon(device.device_type) }}</div>
+        </td>
+        <td class="td-name">{{ device.device_name }}</td>
+        <td class="td-mono">{{ device.mac_address }}</td>
+        <td>
+          {% if device.assigned_ip %}
+            <span class="ip-value">{{ device.assigned_ip }}</span>
+          {% else %}
+            <span class="ip-none">—</span>
+          {% endif %}
+        </td>
+        <td><span class="badge">{{ device.device_type }}</span></td>
+        <td class="td-date">{{ device.date_added.strftime('%Y-%m-%d') }}</td>
+        <td class="td-date">
+          {% if device.date_modified %}{{ device.date_modified.strftime('%Y-%m-%d') }}{% else %}<span style="color:var(--text-dim)">—</span>{% endif %}
+        </td>
+        <td>
+          <div class="td-actions">
+            <a href="{{ url_for('edit_device', id=device.id) }}" class="btn-icon edit" title="Edit">✎</a>
+            <button class="btn-icon delete" title="Delete"
+              onclick="confirmDelete({{ device.id }}, '{{ device.device_name | e }}')">✕</button>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-state-icon">⬡</div>
+    <h3>No devices found</h3>
+    <p>Add your first device to start tracking your network.</p>
+    <a href="{{ url_for('add_device') }}" class="btn btn-primary">+ Add Device</a>
+  </div>
+  {% endif %}
+</div>
 
+<!-- Delete confirm modal -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <h3>Delete device?</h3>
+    <p id="confirmMsg">This cannot be undone.</p>
+    <div class="confirm-actions">
+      <form id="deleteForm" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+      <button class="btn btn-secondary" onclick="closeConfirm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function confirmDelete(id, name) {
+    document.getElementById('deleteForm').action = '/delete-device/' + id;
+    document.getElementById('confirmMsg').textContent = 'Delete "' + name + '"? This cannot be undone.';
+    document.getElementById('confirmOverlay').classList.add('open');
+  }
+  function closeConfirm() {
+    document.getElementById('confirmOverlay').classList.remove('open');
+  }
+  document.getElementById('confirmOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeConfirm();
+  });
+</script>
 {% endblock %}
